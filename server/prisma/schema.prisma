@@ -1,0 +1,100 @@
+/*
+
+Stock Savvy App -- Prisma Schema
+
+1. SearchHistory: PRD only had "name" (free text). Added 'Ticker' and 'Exchange'
+so history entry can actually navigate back to the correct stock detail page, not just display a string.
+
+2. Cascade Delete: all user-owned data (SearchHistory, Watchlist, WatchlistItem via Watchlist, SavedAnalysis) is deleted when the User is deleted
+
+3. Auth: PRD listed `passwordHash` or authprovider_id` as alternatives dependong on whether a managed auth provider was used.
+Custom JWT was chosen, so only `passwordHash` exists -- no authprovider_id.
+
+*/
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+//Mirrors the exchange type in types.ts
+//keep these in sync if TSX support is added back later
+
+enum Exchange {
+    NYSE
+    TSX
+}
+
+enum Recommendation {
+    BUY
+    HOLD
+    SELL
+}
+
+model User {
+    id  String  @id @default(cuid())
+    email   String  @unique
+    passwordHash    String
+    createdAt   DateTime    @default(now())
+
+    searchHistory   SearchHistory[]
+    watchlists  Watchlist[]
+    savedAnalyses   SavedAnalysis[]
+}
+
+model SearchHistory {
+    id  String  @id @default(cuid())
+    userId  String 
+    ticker  String
+    exchange    Exchange
+    createdAt   DateTime    @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    //Recent-searches lookups are always "most recent N for this user"
+    @@index([userId, createdAt])
+}
+
+model Watchlist {
+    id String   @id @default(cuid())
+    userId  String 
+    name    String
+    createdAt   DateTime    @default(now())
+
+    user User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    items WatchlistItem[]
+
+    @@index([userId])
+}
+
+model WatchlistItem {
+    id  String  @id @default(cuid())
+    watchlistId String
+    ticker  String
+    exchange    Exchange
+    addedAt DateTime    @default(now())
+
+    watchlist Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+
+    //Prevents adding the same stock to the same watchlist twice
+    @@unique([watchlistId, ticker, exchange])
+}
+
+model SavedAnalysis {
+    id  String  @id @default(cuid())
+    userId  String
+    ticker  String
+    exchange Exchange
+    recommendation  Recommendation
+    explanation String
+    createdAt   DateTime    @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId, createdAt])
+}
