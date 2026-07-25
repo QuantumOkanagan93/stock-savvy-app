@@ -13,12 +13,12 @@ Custom JWT was chosen, so only `passwordHash` exists -- no authprovider_id.
 */
 
 generator client {
-    provider = "prisma-client-js"
+    provider = "prisma-client"
+    output = "../src/generated/prisma"
 }
 
 datasource db {
     provider = "postgresql"
-    url = env("DATABASE_URL")
 }
 
 //Mirrors the exchange type in types.ts
