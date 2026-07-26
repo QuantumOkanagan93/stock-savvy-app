@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 import { hashPassword, verifyPassword } from "../utils/password";
 import { signToken } from "../utils/jwt";
-import { signupSchema, loginSchema } from "../validation/authSchemas";
+import { signupSchema, loginSchema } from "../validation/authSchema";
 import { authCookieOptions } from "../utils/cookieOptions";
 import { COOKIE_NAME } from "../middleware/authMiddleware";
 
@@ -24,8 +24,7 @@ export async function signup(req: Request, res: Response) {
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
     // Deliberately vague -- don't confirm/deny which emails are
-    // registered any more than necessary, though for signup this
-    // particular case is unavoidable to report.
+    // registered any more than necessary
     return res.status(409).json({ error: "An account with this email already exists" });
   }
 
@@ -81,15 +80,11 @@ export async function logout(_req: Request, res: Response) {
 /** Returns the currently authenticated user. Requires requireAuth
  *  middleware to have run first (req.user populated). */
 export async function me(req: Request, res: Response) {
-  // req.user is guaranteed by requireAuth, but re-fetch from the DB
-  // rather than trusting stale JWT claims for anything beyond identity.
   const user = await prisma.user.findUnique({
     where: { id: req.user!.userId },
   });
 
   if (!user) {
-    // Edge case: user was deleted after the JWT was issued but before
-    // it expired. Treat as unauthenticated.
     return res.status(401).json({ error: "Not authenticated" });
   }
 
