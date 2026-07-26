@@ -12,6 +12,7 @@ app.use(cookieParser());
 //const PORT = process.env.PORT || 4000;
 
 app.get("/health", async (_req, res) => {
+    const userCount = await prisma.user.count();
     res.json({ status: "ok", });
 });
 
