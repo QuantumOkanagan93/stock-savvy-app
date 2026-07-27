@@ -47,4 +47,67 @@ export default function AuthPage() {
             setIsSubmitting(false);
         }
     }
+    return (
+        <div className="auth-page">
+            <div className="auth-card">
+                <div className="auth-masthead">
+                    <span className="auth-eyebrow">Stock Savvy</span>
+                    <h1 className="auth-title">
+                        {mode === "login" ? "Welcome back" : "Open an account"}
+                    </h1>
+                    <p className="auth-subtitle">
+                        {mode === "login"
+                        ? "Sign in to pick up your watchlist where you left it."
+                        : "Quick ticker lookups, plain-language recommendations, nothing overloaded."}
+                    </p>
+                </div>
+                <form className="auth-form" onSubmit={handleSubmit} noValidate>
+                    <label className="auth-field">
+                        <span className="auth-label">Email</span>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="auth-input"
+                            autoComplete={mode === "login" ? "current-password" : "new-password"}
+                            required
+                        />
+                        {fieldErrors.password && (
+                            <span className="auth-field-error">
+                                {fieldErrors.password[0]}
+                            </span>
+                        )}
+                    </label>
+                    {formError && <div className="auth-form-error">{formError}</div>}
+                    <button type="submit" className="auth-submit" disabled={isSubmitting}>
+                        {isSubmitting
+                        ? "Please wait..."
+                        : mode === "login"
+                        ? "Sign in"
+                        : "Create account"}
+                    </button>
+                </form>
+                <div className="auth-switch">
+                    {mode === "login" ? (
+                        <>
+                        New Here?{" "}
+                        <button className="auth-switch-link" onClick={() => switchMode("signup")}>
+                            Open an account
+                        </button>
+                        </>
+                    ) : (
+                        <>
+                        Already have an account?{" "}
+                        <button className="auth-switch-link" onClick={() => switchMode("login")}>
+                            Sign In
+                        </button>
+                        </>
+                    )}
+                </div>
+                <p className="auth-disclaimer">
+                    Stock Savvy provides educational analytics, NOT financial advice.
+                </p>
+            </div>
+        </div>
+    );
 }
