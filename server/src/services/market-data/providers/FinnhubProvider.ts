@@ -8,31 +8,40 @@ import type {
   Resolution,
   SymbolSearchResult,
   Exchange,
-} from "../types.js";
+} from "../types";
 import {
   SymbolNotSupportedError,
   ProviderUnavailableError,
-} from "../Errors.js";
-import { time } from "node:console";
+} from "../Errors";
 
 const FINNHUB_BASE_URL = "https://finnhub.io/api/v1";
 
+/** Maps our canonical exchange codes to Finnhub's exchange suffix
+ *  convention. NYSE tickers are unsuffixed; TSX tickers use ".TO".
+ *  If Finnhub changes this convention, it only needs to change here. */
 function toFinnhubSymbol(symbol: StockSymbol): string {
   if (symbol.exchange === "TSX") return `${symbol.ticker}.TO`;
   return symbol.ticker; // NYSE
 }
 
-/** Reverses toFinnhubSymbol for parsing search results. */
-function fromFinnhubSymbol(raw: string): StockSymbol {
+/** Reverses toFinnhubSymbol for parsing search results. Returns null
+ * for any exchange that we don't support (for now)...
+ */
+function fromFinnhubSymbol(raw: string): StockSymbol | null {
   if (raw.endsWith(".TO")) {
     return { ticker: raw.slice(0, -3), exchange: "TSX" };
   }
+  if (raw.includes(".")) {
+    // Any other suffix is a foreign exchange we don't support at all
+    return null;
+  }
+  // No suffix is Finnhub's convention for US-listed symbols
   return { ticker: raw, exchange: "NYSE" };
 }
 
 export class FinnhubProvider implements MarketDataProvider {
   readonly name = "finnhub";
-
+  // change this to add more exchanges once able to/want to/available to
   readonly supportedExchanges: Exchange[] = ["NYSE"];
 
   constructor(private readonly apiKey: string) {
@@ -183,49 +192,64 @@ export class FinnhubProvider implements MarketDataProvider {
       result: Array<{ symbol: string; description: string; type: string }>;
     }>(`/search?q=${encodeURIComponent(query)}`);
 
-    return data.result
-      .filter((r) => r.type === "Common Stock")
-      .map((r) => {
-        const { ticker, exchange } = fromFinnhubSymbol(r.symbol);
-        return { ticker, companyName: r.description, exchange };
-      })
-      .filter((r) => this.supportedExchanges.includes(r.exchange));
+    const results: SymbolSearchResult[] = [];
+
+    for (const r of data.result) {
+      if (r.type !== "Common Stock") continue;
+
+      const parsedSymbol = fromFinnhubSymbol(r.symbol);
+      if (!parsedSymbol) continue; // unrecognized/unsupported exchange suffix
+
+      if (!this.supportedExchanges.includes(parsedSymbol.exchange)) continue;
+
+      results.push({
+        ticker: parsedSymbol.ticker,
+        companyName: r.description,
+        exchange: parsedSymbol.exchange,
+      });
+    }
+
+    return results;
   }
 }
 
 function zipCandles(data: {
-    t:number[];
-    o: number[];
-    h: number[];
-    l: number[];
-    c: number[];
-    v: number[];
+  t: number[];
+  o: number[];
+  h: number[];
+  l: number[];
+  c: number[];
+  v: number[];
 }): Candle[] {
-    const candles: Candle[] = [];
+  const candles: Candle[] = [];
 
-    for (let i = 0; i < data.t.length; i++) {
-        const timestamp = data.t[i];
-        const open = data.o[i];
-        const high = data.h[i];
-        const low = data.l[i];
-        const close = data.c[i];
-        const volume = data.v[i];
+  for (let i = 0; i < data.t.length; i++) {
+    const timestamp = data.t[i];
+    const open = data.o[i];
+    const high = data.h[i];
+    const low = data.l[i];
+    const close = data.c[i];
+    const volume = data.v[i];
 
-        //Protection against returning ragged arrays for this index
-        if(
-            timestamp === undefined ||
-            open === undefined ||
-            high === undefined ||
-            low === undefined ||
-            close === undefined ||
-            volume === undefined
-        ) {
-            console.warn(
-                `[finnhub] Skipping malformed candle at index ${i}: one or more fields missing`
-            );
-            continue;
-        }
-        candles.push({ timestamp, open, high, low, close, volume });
+    // Guard against Finnhub returning mismatched-length arrays for
+    // this index -- skip the malformed point rather than letting
+    // `undefined` silently flow into the recommendation engine's math.
+    if (
+      timestamp === undefined ||
+      open === undefined ||
+      high === undefined ||
+      low === undefined ||
+      close === undefined ||
+      volume === undefined
+    ) {
+      console.warn(
+        `[finnhub] Skipping malformed candle at index ${i}: one or more fields missing`
+      );
+      continue;
     }
-    return candles;
+
+    candles.push({ timestamp, open, high, low, close, volume });
+  }
+
+  return candles;
 }
