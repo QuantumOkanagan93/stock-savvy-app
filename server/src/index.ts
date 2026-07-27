@@ -1,11 +1,24 @@
 import { env } from "./config/env";
 import express from "express";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import { prisma } from "./lib/prisma";
 import authRoutes from "./routes/authRoutes";
 import stockRoutes from "./routes/StockRoutes";
 
 const app = express();
+
+/**
+ * Credentials: true is required for the httpOnly auth cookie
+ * to be sent/received cross-origin (client: 5173, API: 4000)
+ */
+
+app.use(
+    cors({
+        origin: env.CLIENT_URL,
+        credentials: true,
+    })
+);
 
 app.use(express.json());
 app.use(cookieParser());
