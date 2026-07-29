@@ -9,7 +9,7 @@ export function signup(email: string, password: string) {
 }
 
 export function login(email: string, password: string) {
-    return apiRequest<{ user: User }>("api/auth/login", {
+    return apiRequest<{ user: User }>("/api/auth/login", {
         method: "POST",
         body: { email, password },
     });
@@ -22,5 +22,5 @@ export function logout() {
 }
 
 export function getMe() {
-    return apiRequest<{ user: User }>("api/auth/me");
+    return apiRequest<{ user: User }>("/api/auth/me");
 }
