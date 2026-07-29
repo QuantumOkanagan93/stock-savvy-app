@@ -34,6 +34,7 @@ export default function AuthPage() {
       }
       navigate("/");
     } catch (err) {
+      console.error("Login/signup error:", err); // TEMPORARY -- remove once bug is found
       if (err instanceof ApiError) {
         if (err.fieldErrors) {
           setFieldErrors(err.fieldErrors);
