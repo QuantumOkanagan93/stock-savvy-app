@@ -67,6 +67,30 @@ export default function SearchBar({ onSelect }: SearchBarProps) {
                 placeholder="Search by ticker or company name"
                 className="search-input"
             />
+
+            { isOpen && (
+                <div className="search-dropdown">
+                    {isLoading && <div className="search-statuts">Searching....</div>}
+                    {!isLoading && error && <div className="search-status search-error">{error}</div>}
+                    {!isLoading && !error && results.length === 0 && (
+                        <div className="search-status">No matches found.</div>
+                    )}
+
+                    {!isLoading &&
+                    !error &&
+                    results.map((result) => (
+                        <button
+                            key={`${result.ticker}-${result.exchange}`}
+                            className="search-result-row"
+                            onClick={() => handleSelect(result)}
+                        >
+                            <span className="search-result-ticker numeric">{result.ticker}</span>
+                            <span className="search-result-name">{result.companyName}</span>
+                            <span className="search-result-exchange">{result.exchange}</span>
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
-    )
+    );
 }
