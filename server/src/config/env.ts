@@ -4,6 +4,8 @@ import { z } from "zod";
 const envSchema = z.object({
     DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
     FINNHUB_API_KEY: z.string().min(1, "FINNHUB_API_KEY is required"),
+    ALPACA_API_KEY_ID: z.string().optional(),
+    ALPACA_API_SECRET_KEY: z.string().optional(),
     JWT_SECRET: z
     .string()
     .min(32, "JWT_SECRET must be at least 32 characters long"),
