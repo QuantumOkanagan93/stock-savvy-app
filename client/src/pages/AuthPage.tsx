@@ -125,7 +125,7 @@ export default function AuthPage() {
         </div>
 
         <p className="auth-disclaimer">
-          Stock Savvy provides educational analytics, not financial advice.
+          Stock Savvy provides educational analytics, NOT financial advice.
         </p>
       </div>
     </div>
