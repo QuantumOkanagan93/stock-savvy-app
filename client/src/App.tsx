@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import StockDetailPage from "./pages/StockDetailPage";
 
 export default function App() {
   return (
@@ -12,6 +13,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/stock/:exchange/:ticker"
+        element={
+          <ProtectedRoute>
+            <StockDetailPage />
           </ProtectedRoute>
         }
       />
