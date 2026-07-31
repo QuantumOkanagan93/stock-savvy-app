@@ -10,6 +10,7 @@ import type {
 } from "./types.js";
 import { SymbolNotSupportedError, ProviderUnavailableError } from "./Errors.js";
 import { FinnhubProvider } from "./providers/FinnhubProvider.js";
+import { TwelveDataProvider } from "./providers/TwelveDataProvider.js";
 
 /**
  * Wraps a primary provider with an optional secondary fallback.
