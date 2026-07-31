@@ -1,0 +1,58 @@
+.recent-searches {
+  margin-top: var(--space-8);
+}
+
+.recent-searches-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin: 0 0 var(--space-3);
+}
+
+.recent-searches-list {
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.recent-search-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-paper-raised);
+  border: none;
+  border-bottom: 1px solid var(--color-hairline);
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.recent-search-row:last-child {
+  border-bottom: none;
+}
+
+.recent-search-row:hover {
+  background: var(--color-paper);
+}
+
+.recent-search-ticker {
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.recent-search-exchange {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted-gold);
+}
+
+.recent-search-time {
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+}
