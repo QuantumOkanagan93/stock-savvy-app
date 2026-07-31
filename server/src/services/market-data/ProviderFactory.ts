@@ -11,6 +11,8 @@ import type {
 import { SymbolNotSupportedError, ProviderUnavailableError } from "./Errors.js";
 import { FinnhubProvider } from "./providers/FinnhubProvider.js";
 import { TwelveDataProvider } from "./providers/TwelveDataProvider.js";
+import { cache } from "react";
+import { fa } from "zod/locales";
 
 /**
  * Wraps a primary provider with an optional secondary fallback.
@@ -107,10 +109,18 @@ export function getMarketDataProvider(): MarketDataProvider {
 
   const primary = new FinnhubProvider(finnhubKey);
 
+  /**
+   * Finnhub's free tier can't return candle data at all...
+   * Twelve data's basic plan fills the gapfor US equities
+   */
+  const twelveDataKey = process.env.TWELVE_DATA_API_KEY;
+
+  const fallback = twelveDataKey ? new TwelveDataProvider(twelveDataKey) : undefined;
+  cachedProvider = new CompositeMarketDataProvider(primary, fallback);
+  return cachedProvider;
+
   // Uncomment once/if a second provider is needed:
   // const fallback = new TwelveDataProvider(process.env.TWELVE_DATA_API_KEY!);
   // cachedProvider = new CompositeMarketDataProvider(primary, fallback);
 
-  cachedProvider = new CompositeMarketDataProvider(primary);
-  return cachedProvider;
 }
