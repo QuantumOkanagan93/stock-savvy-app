@@ -126,7 +126,7 @@ export class TwelveDataProvider implements MarketDataProvider {
 
         const interval = toTwelveDataInterval(resolution);
 
-        const data = await this.request<{ values?: TwelveDataValues[] }>(
+        const data = await this.request<{ values?: TwelveDataValue[] }>(
             `/time_series?symbol=${symbol.ticker}&interval=${interval}&outputsize=100`
         );
 
@@ -135,5 +135,39 @@ export class TwelveDataProvider implements MarketDataProvider {
         }
 
         return { symbol, resolution, candles: this.valuesToCandles(data.values) };
+    }
+
+    async getQuote(symbol: StockSymbol): Promise<Quote> {
+        this.assertSupportedExchange(symbol);
+
+        const data = await this.request<{
+            close: string;
+            open: string;
+            previous_close: string;
+            percent_change: string;
+            timestamp: number;
+        }>(`/quote?symbol=${symbol.ticker}`);
+
+        return {
+            symbol,
+            currentPrice: parseFloat(data.close),
+            openPrice: parseFloat(data.open),
+            previousClose: parseFloat(data.previous_close),
+            percentChangeToday: parseFloat(data.percent_change),
+            timestamp: data.timestamp,
+        };
+    }
+
+    /**
+     * Finnhub reamins sole provider
+     * 
+     * TwelveData's search endpoint exists but there's no need to duplicate it here
+     * since it's never reached as a fallback
+     */
+    async searchSymbol(_query: string): Promise<SymbolSearchResult[]> {
+        throw new ProviderUnavailableError(
+            this.name,
+            "Twelve Data Search is unused -- Finnhub handles this"
+        );
     }
 }
