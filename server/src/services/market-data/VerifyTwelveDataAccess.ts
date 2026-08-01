@@ -34,7 +34,7 @@ async function main() {
     await check("Quote (AAPL)", "/quote?symbol=AAPL");
     await check(
         "Historical daily bars (AAPL, last 7 days)",
-        "/time_series?symbol=AAPLl&interval=1day&outputsize=7"
+        "/time_series?symbol=AAPL&interval=1day&outputsize=7"
     );
     await check(
         "Intraday bars (AAPL, 5min)",
