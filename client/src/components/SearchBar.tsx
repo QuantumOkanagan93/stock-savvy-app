@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { searchStocks } from "../api/stocks";
 import { ApiError } from "../api/client";
-import type { SearchResult, Exchange } from "../types/stocks";
+import type { SearchResult, Exchange } from "../types/stock";
 import "./SearchBar.css";
 
 interface SearchBarProps {

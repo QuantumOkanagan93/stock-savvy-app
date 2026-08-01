@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { selectStock } from "../api/stocks";
 import { ApiError } from "../api/client";
-import type { Quote, Exchange } from "../types/stocks";
+import type { Quote, Exchange } from "../types/stock";
 import "./StockDetailPage.css";
 
 export default function StockDetailPage() {

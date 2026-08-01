@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSearchHistory } from "../api/stocks";
-import type { SearchHistoryEntry, Exchange } from "../types/stocks";
+import type { SearchHistoryEntry, Exchange } from "../types/stock";
 import "./RecentSearches.css";
 
 interface RecentSearchProps {

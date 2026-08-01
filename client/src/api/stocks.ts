@@ -1,5 +1,5 @@
 import { apiRequest } from "./client";
-import type { SearchResult, Quote, SearchHistoryEntry, Exchange } from "../types/stocks";
+import type { SearchResult, Quote, SearchHistoryEntry, Exchange } from "../types/stock";
 
 
 export function searchStocks(query: string) {

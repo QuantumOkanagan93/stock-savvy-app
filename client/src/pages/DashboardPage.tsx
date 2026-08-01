@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import SearchBar from "../components/SearchBar";
 import RecentSearches from "../components/RecentSearches";
-import type { Exchange } from "../types/stocks";
+import type { Exchange } from "../types/stock";
 import "./DashboardPage.css";
 
 export default function DashboardPage() {
