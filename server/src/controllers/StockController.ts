@@ -90,13 +90,14 @@ export async function selectStock(req: Request, res: Response) {
 }
 
 /**
- * Returns user's most recent searches, most recent first
+ * Returns user's most recent searches, most recent first, one entry per unique stock
  */
 export async function getSearchHistory(req: Request, res: Response) {
     const userId = req.user!.userId;
 
     const history = await prisma.searchHistory.findMany({
         where: { userId },
+        distinct: ["ticker", "exchange"],
         orderBy: { createdAt: "desc" },
         take: 20,
     });
