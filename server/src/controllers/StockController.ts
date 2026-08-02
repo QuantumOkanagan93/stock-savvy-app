@@ -42,8 +42,7 @@ const selectSchema = z.object({
 
 /**
  * Called when a user clicks a search result to open the stock detail
- * page. Records the search in SearchHistory (PRD 5.6) and returns the
- * current quote plus a Buy/Hold/Sell recommendation (PRD 4.4/5.5).
+ * page. 
  */
 export async function selectStock(req: Request, res: Response) {
   const parsed = selectSchema.safeParse(req.body);
@@ -106,10 +105,6 @@ export async function selectStock(req: Request, res: Response) {
       }
     }
 
-    // Fire-and-forget isn't appropriate here -- if this fails silently
-    // the user never knows their history isn't being tracked. Await
-    // it, but don't let a history-write failure block returning the
-    // quote the user actually asked for.
     try {
       await prisma.searchHistory.create({
         data: { userId, ticker, exchange },
@@ -121,11 +116,13 @@ export async function selectStock(req: Request, res: Response) {
     return res.status(200).json({ quote, recommendation });
   } catch (err) {
     if (err instanceof SymbolNotSupportedError) {
+      console.error("SymbolNotSupportedError in selectStock:", err.message);
       return res.status(422).json({
         error: `${ticker} (${exchange}) isn't supported yet. Currently only NYSE stocks are available.`,
       });
     }
     if (err instanceof ProviderUnavailableError) {
+      console.error("ProviderUnavailableError in selectStock:", err.message);
       return res.status(503).json({
         error: "Stock data is temporarily unavailable. Please try again shortly.",
       });
@@ -136,8 +133,8 @@ export async function selectStock(req: Request, res: Response) {
 }
 
 /** Returns the user's most recent searches, one entry per unique
- *  stock (most recent visit wins) -- PRD 5.6 / user story "see my
- *  recent searches." */
+ *  stock (most recent visit wins)
+ */
 export async function getSearchHistory(req: Request, res: Response) {
   const userId = req.user!.userId;
 
