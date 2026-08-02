@@ -6,6 +6,13 @@ export interface SearchResult {
     exchange: Exchange;
 }
 
+export type Signal = "BUY" | "HOLD" | "SELL";
+
+export interface Recommendation {
+    signal: Signal;
+    explanation: string;
+}
+
 export interface Quote {
     symbol: { ticker: string; exchange: Exchange};
     currentPrice: number;
