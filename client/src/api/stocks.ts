@@ -1,5 +1,5 @@
 import { apiRequest } from "./client";
-import type { SearchResult, Quote, SearchHistoryEntry, Exchange } from "../types/stock";
+import type { SearchResult, Quote, Recommendation, SearchHistoryEntry, Exchange } from "../types/stock";
 
 
 export function searchStocks(query: string) {
@@ -9,7 +9,7 @@ export function searchStocks(query: string) {
 }
 
 export function selectStock(ticker: string, exchange: Exchange) {
-    return apiRequest<{ quote: Quote}>("/api/stocks/select", {
+    return apiRequest<{ quote: Quote; recommendation: Recommendation}>("/api/stocks/select", {
         method: "POST",
         body: { ticker, exchange }
     });
