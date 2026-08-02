@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { selectStock } from "../api/stocks";
 import { ApiError } from "../api/client";
-import type { Quote, Exchange } from "../types/stock";
+import type { Quote, Exchange, Recommendation } from "../types/stock";
 import "./StockDetailPage.css";
 
 export default function StockDetailPage() {
@@ -12,6 +12,7 @@ export default function StockDetailPage() {
   const [quote, setQuote] = useState<Quote | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
 
   useEffect(() => {
     if (!ticker || !exchange) return;
@@ -20,7 +21,10 @@ export default function StockDetailPage() {
     setError(null);
 
     selectStock(ticker, exchange as Exchange)
-      .then((res) => setQuote(res.quote))
+      .then((res) => {
+        setQuote(res.quote);
+        setRecommendation(res.recommendation);
+      })
       .catch((err) => {
         setError(err instanceof ApiError ? err.message : "Something went wrong loading this stock.");
       })
@@ -71,9 +75,18 @@ export default function StockDetailPage() {
             </div>
 
             <p className="detail-placeholder-note">
-              Chart and Buy/Hold/Sell recommendation come next — this
-              confirms the quote pipeline works end to end.
+              Chart comes next.
             </p>
+
+            {recommendation && (
+              <div className={`recommendation-card recommendation-${recommendation.signal.toLowerCase()}`}>
+                <span className="recommendation-signal">{recommendation.signal}</span>
+                <p className="recommendation-explanation">{recommendation.explanation}</p>
+                <p className="recommendation-disclaimer">
+                  This is an educational analytics tool, NOT financial advice.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </main>
