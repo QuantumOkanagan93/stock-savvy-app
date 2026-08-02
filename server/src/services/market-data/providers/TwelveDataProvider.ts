@@ -107,8 +107,18 @@ export class TwelveDataProvider implements MarketDataProvider {
     async getHistoricalDaily(symbol: StockSymbol, fromUnix: number, toUnix: number): Promise<HistoricalDailySeries> {
         this.assertSupportedExchange(symbol);
 
-        const start = new Date(fromUnix * 1000).toISOString().slice(0, 10);
-        const end = new Date(toUnix * 1000).toISOString().slice(0, 10);
+       // const start = new Date(fromUnix * 1000).toISOString().slice(0, 10);
+       // const end = new Date(toUnix * 1000).toISOString().slice(0, 10);
+
+       /**
+        * Deliberately using `outputSize` rather than start_date/end_date returns HTTP 400 on basic plan
+        * even though its a documented param...
+        * 
+        * outputSize confirms working, so we'll just use "give me roughly the last N days"
+        */
+
+       const daysRequested = Math.ceil((toUnix - fromUnix) / (24 * 60 * 60));
+       const outputSize = Math.min(Math.max(daysRequested, 10), 30);
 
         const data = await this.request<{ values?: TwelveDataValue[] }>(
             `/time_series?symbol=${symbol.ticker}&intervale=1day&start_date=${start}&end_date=${end}`
