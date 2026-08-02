@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
-import { getMarketDataProvider } from "../services/market-data/providerFactory";
-import { SymbolNotSupportedError, ProviderUnavailableError } from "../services/market-data/errors";
-import { generateRecommendation, type Recommendation } from "../services/recommendation/recommendationEngine";
+import { getMarketDataProvider } from "../services/market-data/ProviderFactory";
+import { SymbolNotSupportedError, ProviderUnavailableError } from "../services/market-data/Errors";
+import { generateRecommendation, type Recommendation } from "../services/market-data/recommendation/RecommendationEngine";
 
 const searchQuerySchema = z.object({
   q: z.string().trim().min(1, "Search query cannot be empty"),
