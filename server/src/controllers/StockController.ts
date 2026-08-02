@@ -3,7 +3,8 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { getMarketDataProvider } from "../services/market-data/ProviderFactory";
 import { SymbolNotSupportedError, ProviderUnavailableError } from "../services/market-data/Errors";
-import { get } from "node:http";
+import { generateRecommendation } from "../services/market-data/recommendation/RecommendationEngine";
+import type { Recommendation } from "../generated/prisma/enums";
 
 
 const searchQuerySchema = z.object({
@@ -61,6 +62,36 @@ export async function selectStock(req: Request, res: Response) {
 
     try {
         const quote = await provider.getQuote({ ticker, exchange });
+
+        //Fetch ~ 2 weeks of daily candles -- enough to reliably cover
+        //at least 5 trading days even accounting for weekends/holidays
+        const now = Math.floor(Date.now() / 1000);
+        const fourteenDaysAgo = now - 14 * 24 * 60 * 60;
+        const daily = await provider.getHistoricalDaily({ ticker, exchange }, fourteenDaysAgo, now);
+
+        let recommendation: Recommendation;
+        if (daily.candles.length < 6) {
+            //not enough history yet
+            //degrade gracefully rather than crash
+            recommendation = {
+                signal: "HOLD",
+                explanation:
+                    "Not enough recent trading history is available yet to generate a recommendation.",
+            };
+        } else {
+            const last5 = daily.candles.slice(-5);
+            const fiveDayAvg = last5.reduce((sum, c) => sum + c.close, 0) / last5.length;
+            const priceFiveDaysAgo = daily.candles[daily.candles.length - 6]?.close;
+            const weeklyChangePercent = 
+            ((quote.currentPrice - priceFiveDaysAgo) / priceFiveDaysAgo) * 100;
+
+            recommendation = generateRecommendation({
+                currentPrice: quote.currentPrice,
+                todayPercentChange: quote.percentChangeToday,
+                weeklyChangePercent,
+                fiveDayAverage,
+            });
+        }
 
         // If this fails, the user never knows their history isn't being tracked
         //Await it, but don't let a history-write failure block 
