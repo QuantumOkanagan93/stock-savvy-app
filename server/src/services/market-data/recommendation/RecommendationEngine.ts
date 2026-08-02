@@ -48,4 +48,34 @@ export function generateRecommendation(input: RecommendationInput): Recommendati
 
 function buildExplanation(signal: Signal, input: RecommendationInput): string {
     const { currentPrice, todayPercentChange, weeklyChangePercent, fiveDayAverage } = input;
+
+    const weeklyDirection = weeklyChangePercent >= 0 ? "up" : "down";
+    const weeklyAbs = Math.abs(weeklyChangePercent).toFixed(1);
+    const todayDirection = todayPercentChange >= 0 ? "up" : "down";
+    const todayAbs = Math.abs(todayPercentChange).toFixed(1);
+    const vsAvg =
+        currentPrice > fiveDayAverage
+        ? "above its 5-day average"
+        : currentPrice < fiveDayAverage
+        ? "below its 5-day average"
+        : "in line with its 5-day average";
+    
+    switch(signal) {
+        case "BUY":
+            return (
+                `Buy -- the stock is ${weeklyAbs}% ${weeklyDirection} over the past week and trading ` +
+                `${vsAvg}, suggesting positive short-term momentum. Today it's ${todayAbs}% ${todayDirection}.`
+            );
+        case "SELL":
+            return (
+                `Sell -- The stock is ${weeklyAbs}% ${weeklyDirection} over the past week and trading ` +
+                `${vsAvg}, suggesting a negative short-term momentum. Today it's ${todayAbs}% ${todayDirection}.`
+            );
+        case "HOLD":
+        default:
+            return (
+                `Hold -- the stock's weekly movement (${weeklyAbs}% ${weeklyDirection}) and its position ` +
+                `${vsAvg} don't show a clear short-term direction. Today it's ${todayAbs}% ${todayDirection}.`
+            );
+    }
 }
