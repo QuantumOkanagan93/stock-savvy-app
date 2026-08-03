@@ -22,6 +22,13 @@ export interface Quote {
     timestamp: number;
 }
 
+export interface WatchlistItemEntry {
+    id: string;
+    ticker: string;
+    exchange: Exchange;
+    addedAt: string;
+}
+
 export interface SearchHistoryEntry {
     id: string;
     ticker: string;
