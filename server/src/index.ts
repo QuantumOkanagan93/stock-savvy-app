@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { prisma } from "./lib/prisma";
 import authRoutes from "./routes/authRoutes";
 import stockRoutes from "./routes/StockRoutes";
+import watchlistRoutes from "./routes/WatchlistRoutes";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get("/health", async (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/stocks", stockRoutes);
+app.use("/api/watchlist", watchlistRoutes);
 
 app.listen(env.PORT, () => {
     console.log(`Server is running on http://localhost:${env.PORT}`);
