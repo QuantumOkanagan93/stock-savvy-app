@@ -121,7 +121,7 @@ export class TwelveDataProvider implements MarketDataProvider {
        const outputSize = Math.min(Math.max(daysRequested, 10), 30);
 
         const data = await this.request<{ values?: TwelveDataValue[] }>(
-            `/time_series?symbol=${symbol.ticker}&intervale=1day&start_date=${start}&end_date=${end}`
+            `/time_series?symbol=${symbol.ticker}&intervale=1day&outputsize=${outputSize}`
         );
 
         if (!data.values || data.values.length === 0) {
