@@ -37,6 +37,8 @@ export default function DashboardPage() {
                 */}
                 <SearchBar onSelect={handleSelectStock} />
 
+                <WatchlistSection />
+
                 <RecentSearches onSelect={handleSelectStock} refreshKey={historyRefreshKey} />
             </main>
         </div>
