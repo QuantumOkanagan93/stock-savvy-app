@@ -1,5 +1,5 @@
 import { apiRequest } from "./client";
-import { WatchlistItemEntry, type Exchange } from "../types/stock";
+import { type WatchlistItemEntry, type Exchange } from "../types/stock";
 
 export function getWatchlist() {
     return apiRequest<{ items: WatchlistItemEntry[] }>("/api/watchlist");
