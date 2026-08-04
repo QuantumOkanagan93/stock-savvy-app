@@ -14,7 +14,7 @@ export default function DashboardPage() {
 
     function handleSelectStock(ticker: string, exchange: Exchange) {
         navigate(`/stock/${exchange}/${ticker}`);
-        //Bump th ekey so Recent Searches refetches next time this page is shown
+        //Bump the key so Recent Searches refetches next time this page is shown
         setHistoryRefreshKey((k) => k + 1);
     }
 
