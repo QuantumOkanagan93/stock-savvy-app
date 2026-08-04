@@ -7,6 +7,13 @@ import WatchlistSection from "../components/WatchlistSection";
 import type { Exchange } from "../types/stock";
 import "./DashboardPage.css";
 
+function getGreeting(): string {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Goof afternoon";
+    return "Good evening";
+}
+
 export default function DashboardPage() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
