@@ -1,4 +1,15 @@
+import { RSI, EMA, BollingerBands, ATR } from "technicalindicators";
+
 export type Signal = "BUY" | "HOLD" | "SELL";
+
+export interface OHLCVBar {
+    timestamp: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+}
 
 export interface RecommendationInput {
     currentPrice: number;
