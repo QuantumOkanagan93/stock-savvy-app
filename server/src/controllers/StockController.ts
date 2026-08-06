@@ -25,7 +25,6 @@ export async function searchStocks(req: Request, res: Response) {
     return res.status(200).json({ results });
   } catch (err) {
     if (err instanceof ProviderUnavailableError) {
-      // PRD 5.4/12: fallback state, don't expose raw backend errors
       return res.status(503).json({
         error: "Stock data is temporarily unavailable. Please try again shortly.",
       });
@@ -61,10 +60,23 @@ export async function selectStock(req: Request, res: Response) {
 
     // Fetch ~2 weeks of daily candles -- enough to reliably cover at
     // least 5 trading days even accounting for weekends/holidays.
-    const now = Math.floor(Date.now() / 1000);
-    const fourteenDaysAgo = now - 14 * 24 * 60 * 60;
-    const daily = await provider.getHistoricalDaily({ ticker, exchange }, fourteenDaysAgo, now);
 
+    /**
+     * RSI(14), EMA(20), BollingerBands(20, ATR(14)
+     * all need real burn-in room
+     * fetch a generous (~200 calendar days) so we can reliably
+     * get 100+ trading days back, comfortably above the engine's
+     * 30-bar min even accounting for holidays)
+     */
+    const now = Math.floor(Date.now() / 1000);
+    const twoHundredDaysAgo = now - 200 * 24 * 60 * 60;
+    const daily = await provider.getHistoricalDaily({ ticker, exchange }, twoHundredDaysAgo, now);
+
+    const recommendation: Recommendation = generateRecommendation(daily.candles, quote.percentChangeToday);
+
+    /**
+     * Old Logic, revamped with below 
+     *
     let recommendation: Recommendation;
     if (daily.candles.length < 6) {
       // Not enough history yet (e.g. a recently-listed stock) --
@@ -104,6 +116,7 @@ export async function selectStock(req: Request, res: Response) {
         });
       }
     }
+    */
 
     try {
       await prisma.searchHistory.create({
