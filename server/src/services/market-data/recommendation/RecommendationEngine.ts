@@ -11,6 +11,18 @@ export interface OHLCVBar {
     volume: number;
 }
 
+export interface IndicatorSnapshot {
+    rsi14: number;
+    ema20: number;
+    bbUpper: number;
+    bbLower: number;
+    bbMiddle: number;
+    bbPosition: number;
+    atr14: number;
+    volumeRatio: number;
+    momentum5dPercent: number;
+}
+
 export interface RecommendationInput {
     currentPrice: number;
     todayPercentChange: number;
