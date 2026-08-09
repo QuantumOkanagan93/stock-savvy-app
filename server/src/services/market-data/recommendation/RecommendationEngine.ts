@@ -1,3 +1,4 @@
+import { warn } from "node:console";
 import { sign } from "node:crypto";
 import { RSI, EMA, BollingerBands, ATR } from "technicalindicators";
 
@@ -232,7 +233,18 @@ export function generateRecommendation(
         warnings.push("Low volume suggests weak conviction behind the current price action");
     }
 
-    const explanation = buildExplanation(signal, reasons.length, todayPercentChange);
+    //Added more data for explanation
+    const explanation = buildExplanation(
+        signal,
+        reasons,
+        warnings,
+        todayPercentChange,
+        lastClose,
+        rsi,
+        ema20,
+        volumeRatio,
+        momentum5d
+    );
 
     return {
         signal,
@@ -292,33 +304,81 @@ function buildExplanation(signal: Signal, input: RecommendationInput): string {
     }
 }
 */
+
 function buildExplanation (
     signal: Signal,
-    reasonCount: number,
-    todayPercentageChange: number
+    reasons: string[],
+    warnings: string[],
+    todayPercentageChange: number,
+    currentPrice: number,
+    rsi: number,
+    ema20: number,
+    volumeRatio: number,
+    momentum5d: number
 ): string {
     const todayDirection = todayPercentageChange >= 0 ? "Up" : "Down";
     const todayAbs = Math.abs(todayPercentageChange).toFixed(1);
+    const priceVsEma = currentPrice > ema20 ? "above" : "below";
 
-    const templates: Record<Signal, string[]> = {
+    //Pick 2 - 3 random reasons to weave into the narrative
+    const shuffledReasons = [...reasons].sort(() => Math.random() - 0.5);
+    const selectedReasons = shuffledReasons.slice(0, Math.min(3, reasons.length));
+    const firstSelectedReason: string = selectedReasons[0] ?? "";
+
+    //Base templates for signal
+    const signalTemplates: Record<Signal, string[]> = {
         BUY: [
-            `Buy -- ${reasonCount} indicators point in a bullish direction. Today the stock is ${todayAbs}% ${todayDirection}.`,
-            `Buy -- The balance of trend, momentum and volume signals leans bullish here. Today it's ${todayAbs}% ${todayDirection}.`,
-            `Buy -- multiple short-term indicators align positively. Today's move is ${todayAbs}% ${todayDirection}.`,
+            `Buy - ${selectedReasons.join("; ")}.` +
+            `Today's ${todayAbs}% ${todayDirection} move confirms the bullish momentum. ` +
+            `With RSI at ${rsi.toFixed(1)} and price ${priceVsEma} the 20-day trend ($${ema20.toFixed(2)}), the bulls are in control.`,
+
+            `Buy - The balance of indicators leans bullish. ${firstSelectedReason}. ` +
+            `Volume is ${volumeRatio.toFixed(1)}x average, showing institutional interest. ` +
+            `Today's ${todayAbs}% ${todayDirection} move adds to the case for an entry.`,
+
+            `Buy - Short term momentum is building. ${selectedReasons.join("; ")}. ` +
+            `At $${currentPrice.toFixed(2)}, the stock is gaining traction. ` +
+            `If you are considering a position, this is a strong signal to act within the next 1 - 2 days.`,
         ],
         SELL: [
-            `Sell -- ${reasonCount} indicators point in a bearish direction. Today the stock is ${todayAbs}% ${todayDirection}.`,
-            `Sell -- the balance of trend, momentum and volume signals leans bearish here. Today it's ${todayAbs}% ${todayDirection}.`,
-            `Sell -- multiple short-term indicators align negatively. Today's move is ${todayAbs}% ${todayDirection}.`,
+            `Sell - ${selectedReasons.join("; ")}. ` +
+            `Today's ${todayAbs}% ${todayDirection} move reinforces the bearish trend. ` +
+            `With RSI at ${rsi.toFixed(1)} and price ${priceVsEma} the 20-day trend ($${ema20.toFixed(2)}), the bears are in control.`,
+
+            `Sell - the balance of indicators leans bearish. ${firstSelectedReason}. ` +
+            `Momentum is fading, and volume is ${volumeRatio.toFixed(1)}x average. ` + 
+            `If you're holding, consider taking profits or tighenting your stop-loss.`,
+
+            `Sell - Downward pressure is mounting. ${selectedReasons.join("; ")}. ` +
+            `At $${currentPrice.toFixed(2)}, the stock is losing support. ` +
+            `This is a strong signal to exit or short, with caution for a potential bounce.`,
         ],
         HOLD: [
-            `Hold -- signals are mixed, with no strong directional edge. Today the stock is ${todayAbs}% ${todayDirection}.`,
-            `Hold -- indicators aren't clearly aligned in either direction right now. Today's move is ${todayAbs}% ${todayDirection}.`,
-            `Hold -- there's no clear short-term signal at the moment. Today its ${todayAbs}% ${todayDirection}.`,
+            `Hold - Signals are mixed. ${selectedReasons.join("; ")}. ` +
+            `Today's ${todayAbs}% ${todayDirection} move doesn't change the picture. ` +
+            `With RSI at ${rsi.toFixed(1)} and volume at ${volumeRatio.toFixed(1)}x average, there's no clear edge. ` +
+            `Wait for a stronger directional signal before acting.`,
+
+            `Hold - No clear directional edge at the moment. ${firstSelectedReason}. ` +
+            `The stock is trading at $${currentPrice.toFixed(2)}, ${priceVsEma} its 20-day average ($${ema20.toFixed(2)}). ` +
+            `Patience is key - let the market decide.`,
+
+            `Hold - The indicators aren't aligned. ${selectedReasons.join("; ")}. ` +
+            `Today's ${todayAbs}% ${todayDirection} move is not enough to break the stalemate. ` +
+            `Wait for a clearer signal, or consider looking at other opportunities.`,
         ],
     };
 
-    const options = templates[signal];
+    //Pick a random template for signal
+    const options = signalTemplates[signal];
     const randomIndex = Math.floor(Math.random() * options.length);
-    return options[randomIndex]!;
+    let explanation: string = options[randomIndex] ?? `${signal} - Based on the current technical indicators.`;
+
+    //Append "Watch For" warning if any warnings exist
+    if (warnings.length > 0) {
+        const randomWarning = warnings[Math.floor(Math.random() * warnings.length)];
+        explanation += ` Watch for: ${randomWarning}`;
+    }
+
+    return explanation;
 }
