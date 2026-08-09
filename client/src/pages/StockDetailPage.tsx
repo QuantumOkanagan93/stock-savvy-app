@@ -119,10 +119,23 @@ export default function StockDetailPage() {
               Chart comes next.
             </p>
 
-            {recommendation && (
+            { recommendation && (
               <div className={`recommendation-card recommendation-${recommendation.signal.toLowerCase()}`}>
-                <span className="recommendation-signal">{recommendation.signal}</span>
+                <div className="recommendation-header">
+                  <span className="recommendation-signal">{recommendation.signal}</span>
+                  <span className="recommendation-confidence numeric">
+                    {recommendation.confidence}% confidence
+                  </span>
+                </div>
                 <p className="recommendation-explanation">{recommendation.explanation}</p>
+
+                {recommendation.reasons.length > 0 && (
+                  <ul className="recommendation-reasons">
+                    {recommendation.reasons.map((reason, i) => (
+                      <li key={i}>{reason}</li>
+                    ))}
+                  </ul>
+                )}
                 <p className="recommendation-disclaimer">
                   This is an educational analytics tool, NOT financial advice.
                 </p>
