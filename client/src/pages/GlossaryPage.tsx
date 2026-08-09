@@ -60,6 +60,16 @@ export default function GlossaryPage() {
                         <li><strong>30 - 70:</strong> Neutral (scored between <code>+1</code> and <code>-1</code>).</li>
                     </ul>
                 </div>
+                <div className="glossary-item">
+                    <h3>3. Bollinger Bands Position <span className="weight">(20% weight)</span></h3>
+                    <p>
+                        <strong>20-day bands with 2 standard deviations.</strong> We look at where the price sits inside the bands:
+                    </p>
+                    <ul>
+                        <li><strong>Near Lower Band (pb &lt; 0.1):</strong> Usually a bounce point (bullish, scores <code>+1</code>).</li>
+                        <li><strong>Near Upper Band (pb &gt; 0.9):</strong> Usually a resistance point (bearish, scores <code>-1</code>).</li>
+                    </ul>
+                </div>
             </main>
         </div>
     )
