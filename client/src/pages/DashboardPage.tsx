@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import SearchBar from "../components/SearchBar";
 import RecentSearches from "../components/RecentSearches";
@@ -35,13 +35,29 @@ export default function DashboardPage() {
             </header>
 
             <main className="dashboard-main">
-                <h1 className="dashboard-title">Good to see you, {user?.email}</h1>
+                <h1 className="dashboard-title">{getGreeting()}, {user?.email}</h1>
                 {/*}
                 <p className="dashboard-note">
                     Search and watchlist go here next - this page confirms
                     your session is live end to end.
                 </p>
                 */}
+                <div
+                    className="dashboard-glossary-link"
+                    style={{
+                        marginBottom: "20px"
+                    }}>
+                        <Link
+                            to="/glossary"
+                            className="glossary-nav-link"
+                            style = {{
+                                color: "#4A90E2",
+                                textDecoration: "underline",
+                                fontWeight: "500"
+                            }}>
+                                How our BUY / SELL / HOLD signals work (Technical Glossary)
+                            </Link>
+                    </div>
                 <SearchBar onSelect={handleSelectStock} />
 
                 <WatchlistSection />

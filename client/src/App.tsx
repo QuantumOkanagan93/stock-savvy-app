@@ -3,6 +3,7 @@ import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StockDetailPage from "./pages/StockDetailPage";
+import GlossaryPage from "./pages/GlossaryPage";
 
 export default function App() {
   return (
@@ -22,6 +23,12 @@ export default function App() {
           <ProtectedRoute>
             <StockDetailPage />
           </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/glossary"
+        element={
+          <GlossaryPage />
         }
       />
     </Routes>
