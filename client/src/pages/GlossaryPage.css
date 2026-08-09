@@ -1,184 +1,192 @@
-/* GlossaryPage.css */
 
 .glossary-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+  min-height: 100vh;
 }
 
 .glossary-header {
-  margin-bottom: 2rem;
+  display: flex;
+  justify-content: flex-start;
+  padding: var(--space-4) var(--space-8);
+  border-bottom: 1px solid var(--color-hairline);
+  background: var(--color-paper-raised);
 }
 
 .glossary-back {
   background: none;
   border: none;
-  color: #4A90E2;
-  font-size: 1rem;
+  color: var(--color-ink-muted);
+  font-size: 0.85rem;
   cursor: pointer;
-  padding: 0.5rem 0;
-  transition: color 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+  padding: 0;
+  transition: color 0.2s ease;
 }
 
 .glossary-back:hover {
-  color: #2c6fb0;
-  text-decoration: underline;
+  color: var(--color-ink);
 }
 
 .glossary-main {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-6);
 }
 
 .glossary-main h1 {
-  margin-top: 0;
-  color: #1a1a1a;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: -0.5px;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin: 0 0 var(--space-3);
+  color: var(--color-ink);
 }
 
 .glossary-intro {
-  color: #666;
-  font-size: 1.1rem;
+  color: var(--color-ink-muted);
+  font-size: 0.95rem;
   line-height: 1.6;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #eef2f6;
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-hairline);
 }
 
 .glossary-intro strong {
-  color: #1a1a1a;
+  color: var(--color-ink);
 }
 
 .glossary-intro code {
-  background: #f0f4f8;
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  color: #e74c3c;
+  background: var(--color-paper-raised);
+  padding: 0.1rem 0.3rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  color: var(--color-brick-red);
+  border: 1px solid var(--color-hairline);
 }
 
 .glossary-section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-top: 2.5rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #4A90E2;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-hairline);
 }
 
 .glossary-item {
-  background: #f8fafc;
-  border-radius: 8px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1rem;
-  border-left: 4px solid #4A90E2;
-  transition: background 0.2s;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius);
+  padding: var(--space-6);
+  margin-bottom: var(--space-4);
+  transition: border-color 0.2s ease;
 }
 
 .glossary-item:hover {
-  background: #f1f5f9;
+  border-color: rgba(74, 144, 226, 0.3);
 }
 
 .glossary-item h3 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  margin: 0 0 var(--space-2);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 .glossary-item p {
-  margin: 0.5rem 0;
-  color: #444;
+  margin: 0;
+  font-size: 0.9rem;
   line-height: 1.6;
+  color: var(--color-ink);
 }
 
 .glossary-item ul {
-  margin: 0.5rem 0 0 0;
-  padding-left: 1.25rem;
-  color: #444;
+  margin: var(--space-3) 0 0;
+  padding-left: var(--space-4);
+  font-size: 0.9rem;
+  color: var(--color-ink-muted);
   line-height: 1.6;
 }
 
 .glossary-item ul li {
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-1);
 }
 
 .glossary-term {
   display: inline-block;
-  padding: 0.1rem 0.8rem;
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius);
 }
 
 .signal-buy {
-  color: #2e7d32;
-  background: #e8f5e9;
+  background: var(--color-ledger-green);
+  color: var(--color-paper-raised);
 }
 
 .signal-sell {
-  color: #c62828;
-  background: #ffebee;
+  background: var(--color-brick-red);
+  color: var(--color-paper-raised);
 }
 
 .signal-hold {
-  color: #b7950b;
-  background: #fff8e1;
+  background: var(--color-muted-gold);
+  color: var(--color-paper-raised);
 }
 
 .weight {
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
   font-weight: 400;
-  color: #888;
-  background: #eef2f6;
-  padding: 0.1rem 0.5rem;
-  border-radius: 12px;
-  margin-left: 0.5rem;
+  color: var(--color-ink-muted);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  letter-spacing: 0.05em;
 }
 
 code {
-  background: #f0f4f8;
+  background: var(--color-paper-raised);
   padding: 0.1rem 0.3rem;
-  border-radius: 3px;
-  font-size: 0.9rem;
-  color: #e74c3c;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  color: var(--color-brick-red);
+  border: 1px solid var(--color-hairline);
 }
 
-
 .glossary-disclaimer {
-  margin-top: 3rem;
-  padding: 1.25rem 1.5rem;
-  background: #fff8e1;
-  border-radius: 8px;
-  border-left: 4px solid #f9a825;
-  color: #795548;
-  font-size: 0.95rem;
+  margin-top: var(--space-8);
+  padding: var(--space-6);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  font-style: italic;
   line-height: 1.6;
 }
 
 .glossary-disclaimer strong {
-  color: #e65100;
+  color: var(--color-brick-red);
+  font-style: normal;
 }
 
 
 @media (max-width: 768px) {
-  .glossary-page {
-    padding: 1rem;
+  .glossary-header {
+    padding: var(--space-3) var(--space-4);
   }
 
   .glossary-main {
-    padding: 1.25rem;
+    padding: var(--space-8) var(--space-4);
   }
 
   .glossary-main h1 {
@@ -186,10 +194,10 @@ code {
   }
 
   .glossary-item {
-    padding: 1rem;
+    padding: var(--space-4);
   }
 
   .glossary-section-title {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
 }
