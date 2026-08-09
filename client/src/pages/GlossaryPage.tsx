@@ -70,6 +70,12 @@ export default function GlossaryPage() {
                         <li><strong>Near Upper Band (pb &gt; 0.9):</strong> Usually a resistance point (bearish, scores <code>-1</code>).</li>
                     </ul>
                 </div>
+                <div className="glossary-item">
+                    <h3>4. Volume Ratio <span className="weight">(15% weight)</span></h3>
+                    <p>
+                        Compares the average volume of the <strong>Last 5 days</strong> to the average of the <strong>15 days prior</strong>
+                    </p>
+                </div>
             </main>
         </div>
     )
