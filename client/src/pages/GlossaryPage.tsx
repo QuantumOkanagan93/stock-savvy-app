@@ -51,6 +51,14 @@ export default function GlossaryPage() {
                 </div>
                 <div className="glossary-item">
                     <h3>2. RSI 14 <span className="weight">(25% Weight)</span></h3>
+                    <p>
+                        <strong>Relative Strength Index (14-day).</strong> Measures momentum speed and change.
+                    </p>
+                    <ul>
+                        <li><strong>Below 30:</strong> Oversold (bullish, scores <code>+1).</code></li>
+                        <li><strong>Above 70:</strong> Overbought (bearish, scores <code>-1).</code></li>
+                        <li><strong>30 - 70:</strong> Neutral (scored between <code>+1</code> and <code>-1</code>).</li>
+                    </ul>
                 </div>
             </main>
         </div>
