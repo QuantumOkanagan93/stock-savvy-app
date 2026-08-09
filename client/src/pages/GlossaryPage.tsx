@@ -75,8 +75,41 @@ export default function GlossaryPage() {
                     <p>
                         Compares the average volume of the <strong>Last 5 days</strong> to the average of the <strong>15 days prior</strong>
                     </p>
+                    <ul>
+                        <li><strong>&gt; 1.5x:</strong> Strong recent interest (bullish, scores <code>+1</code>).</li>
+                        <li><strong>1.0x - 1.5x:</strong> Gradual increase in interest.</li>
+                        <li><strong>&lt; 1.0x:</strong> Decreasing interest.</li>
+                    </ul>
+                </div>
+                <div className="glossary-item">
+                    <h3>5. 5-Day Momentum <span className="weight">(10% Weight)</span></h3>
+                    <p>
+                        The percentage change between today's close and the close from 5 days ago.
+                    </p>
+                    <ul>
+                        <li><strong>&gt; 3%</strong> Strong positive momentum (<code>+1</code>).</li>
+                        <li><strong>&lt; -3%</strong> Strong negative momentum (<code>-1</code>).</li>
+                    </ul>
+                </div>
+                <h2 className="glossary-section-title">Confidence Score</h2>
+                <div className="glossary-item">
+                    <p>
+                        Calculated as <code>50 + (|Score| x 50)</code>, capped at 95%. The stronger the composite score (further than 0,
+                        the higher the confidence in the recommendation.
+                    </p>
+                </div>
+                <h2 className="glossary-section-title">Data Requirements</h2>
+                <div className="glossary-item">
+                    <p>
+                        The engine requires at least <strong>30 days of historical OHLCV data</strong> (Open, High, Low, Close, Volume)
+                        to calculate indicators accurately. If insufficient data is available, it defaults to a <strong>HOLD</strong> with 50% confidence.
+                    </p>
+                </div>
+                <div className="glossary-disclaimer">
+                    <p><strong>Educational Disclaimer:</strong> This tool uses technical analysis for educational purposes only.
+                    It is <em>NOT</em> financial advice. Always do your own research before making investment decisions.</p>
                 </div>
             </main>
         </div>
-    )
+    );
 }
