@@ -118,8 +118,10 @@ export class TwelveDataProvider implements MarketDataProvider {
     // outputsize is confirmed working (see verifyTwelveDataAccess.ts),
     // and for our purposes ("give me roughly the last N days") it's
     // just as good -- we don't need an exact calendar boundary.
+    //increased cap to 150 (from 30), the multi-indicator engine needs a 
+    //comfortable margin above its own 30-bar min once weekends/holidays reduce calendar days to trading days
     const daysRequested = Math.ceil((toUnix - fromUnix) / (24 * 60 * 60));
-    const outputsize = Math.min(Math.max(daysRequested, 10), 30);
+    const outputsize = Math.min(Math.max(daysRequested, 10), 150);
 
     const data = await this.request<{ values?: TwelveDataValue[] }>(
       `/time_series?symbol=${symbol.ticker}&interval=1day&outputsize=${outputsize}`
