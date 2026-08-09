@@ -35,7 +35,7 @@ export default function DashboardPage() {
             </header>
 
             <main className="dashboard-main">
-                <h1 className="dashboard-title">{getGreeting()}, {user?.email}</h1>
+                <h1 className="dashboard-title">{getGreeting()}, {/*{user?.email}*/}</h1>
                 {/*}
                 <p className="dashboard-note">
                     Search and watchlist go here next - this page confirms
