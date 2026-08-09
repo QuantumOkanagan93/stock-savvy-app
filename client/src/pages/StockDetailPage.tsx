@@ -124,7 +124,7 @@ export default function StockDetailPage() {
                 <div className="recommendation-header">
                   <span className="recommendation-signal">{recommendation.signal}</span>
                   <span className="recommendation-confidence numeric">
-                    {recommendation.confidence}% confidence
+                    {recommendation.confidence} % confidence
                   </span>
                 </div>
                 <p className="recommendation-explanation">{recommendation.explanation}</p>
