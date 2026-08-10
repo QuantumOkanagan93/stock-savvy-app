@@ -60,5 +60,4 @@ export interface StockDetailResponse {
         buyToHold: number | null;
         holdToSell: number | null;
     };
-    candles: any[];
 }
