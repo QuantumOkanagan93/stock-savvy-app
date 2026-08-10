@@ -39,7 +39,7 @@ export default function StockDetailPage() {
       .then((res) => {
         setQuote(res.quote);
         setRecommendation(res.recommendation);
-      //  setFlipThresholds(res.flipThresholds);
+        setFlipThresholds(res.flipThresholds);
       })
       .catch((err) => {
         setError(err instanceof ApiError ? err.message : "Something went wrong loading this stock.");
