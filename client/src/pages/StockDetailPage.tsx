@@ -15,8 +15,17 @@ export default function StockDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
 
-  //Tracks whether both the stock is on a watchlist, and (once known) its item id
-  //need to call the delete endpoint which takes an id rather than a ticker/exchange pair
+  // 👇 NEW STATE: Stores the Flip Thresholds sent from the server
+  const [flipThresholds, setFlipThresholds] = useState<{
+    buyToHold: number | null;
+    holdToSell: number | null;
+  }>({
+    buyToHold: null,
+    holdToSell: null,
+  });
+
+  // Tracks whether both the stock is on a watchlist, and (once known) its item id
+  // need to call the delete endpoint which takes an id rather than a ticker/exchange pair
   const [watchlistItemId, setWatchlistItemId] = useState<string | null>(null);
   const [isWatchlistBusy, setIsWatchlistBusy] = useState(false);
 
@@ -30,6 +39,7 @@ export default function StockDetailPage() {
       .then((res) => {
         setQuote(res.quote);
         setRecommendation(res.recommendation);
+      //  setFlipThresholds(res.flipThresholds);
       })
       .catch((err) => {
         setError(err instanceof ApiError ? err.message : "Something went wrong loading this stock.");
@@ -115,6 +125,31 @@ export default function StockDetailPage() {
               </div>
             </div>
 
+            {(flipThresholds.buyToHold !== null || flipThresholds.holdToSell !== null) && (
+              <div className="flip-threshold-card">
+                <div className="flip-header">
+                  <span className="flip-label">🔮 Signal Flip Points</span>
+                  <span className="flip-badge">What changes the signal?</span>
+                </div>
+                <div className="flip-grid">
+                  {flipThresholds.buyToHold !== null && (
+                    <div className="flip-item">
+                      <span className="flip-from">BUY → HOLD</span>
+                      <span className="flip-price">${flipThresholds.buyToHold.toFixed(2)}</span>
+                      <span className="flip-note">If price drops below this</span>
+                    </div>
+                  )}
+                  {flipThresholds.holdToSell !== null && (
+                    <div className="flip-item">
+                      <span className="flip-from">HOLD → SELL</span>
+                      <span className="flip-price">${flipThresholds.holdToSell.toFixed(2)}</span>
+                      <span className="flip-note">If price drops below this</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             <p className="detail-placeholder-note">
               Chart comes next.
             </p>
@@ -124,7 +159,7 @@ export default function StockDetailPage() {
                 <div className="recommendation-header">
                   <span className="recommendation-signal">{recommendation.signal}</span>
                   <span className="recommendation-confidence numeric">
-                    {recommendation.confidence} % confidence
+                    {recommendation.confidence}% confidence
                   </span>
                 </div>
                 <p className="recommendation-explanation">{recommendation.explanation}</p>
