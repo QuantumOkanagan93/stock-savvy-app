@@ -51,6 +51,7 @@ export async function apiRequest<T>(
         method: options.method || "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
+        mode: "cors",
         body: options.body ? JSON.stringify(options.body) : undefined,
     });
 
