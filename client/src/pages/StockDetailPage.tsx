@@ -4,6 +4,7 @@ import { selectStock } from "../api/stocks";
 import { getWatchlist, addToWatchlist, removeFromWatchlist } from "../api/watchlist";
 import { ApiError } from "../api/client";
 import type { Quote, Exchange, Recommendation } from "../types/stock";
+import StockChart from "../components/StockChart";
 import "./StockDetailPage.css";
 
 export default function StockDetailPage() {
@@ -14,6 +15,7 @@ export default function StockDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
+  const [candles, setCandles] = useState<any[]>([]);
 
   const [flipThresholds, setFlipThresholds] = useState<{
     buyToHold: number | null;
@@ -39,6 +41,7 @@ export default function StockDetailPage() {
         setQuote(res.quote);
         setRecommendation(res.recommendation);
         setFlipThresholds(res.flipThresholds);
+        setCandles(res.candles || []);
       })
       .catch((err) => {
         setError(err instanceof ApiError ? err.message : "Something went wrong loading this stock.");
@@ -133,7 +136,7 @@ export default function StockDetailPage() {
 
             <div className="detail-tab-content">
               
-              {/* Tab 1: Overview */}
+              {/* Tab 1: Overview With Chart */}
               {activeTab === "overview" && (
                 <div className="detail-meta">
                   <div className="detail-meta-row">
@@ -150,9 +153,7 @@ export default function StockDetailPage() {
                       ${Math.min(quote.openPrice, quote.currentPrice).toFixed(2)} - ${Math.max(quote.openPrice, quote.currentPrice).toFixed(2)}
                     </span>
                   </div>
-                  <p className="detail-placeholder-note" style={{ marginTop: 'var(--space-6)', paddingTop: 'var(--space-4)', borderTop: '1px solid var(--color-hairline)' }}>
-                    Chart comes next.
-                  </p>
+                  <StockChart candles={candles} />
                 </div>
               )}
 
