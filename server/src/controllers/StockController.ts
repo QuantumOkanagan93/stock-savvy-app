@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma";
 import { getMarketDataProvider } from "../services/market-data/ProviderFactory";
 import { SymbolNotSupportedError, ProviderUnavailableError } from "../services/market-data/Errors";
 import { generateRecommendation, type Recommendation } from "../services/market-data/recommendation/RecommendationEngine";
+import { calculateFlipThresholds } from "../utils/flipThreshold";
 
 const searchQuerySchema = z.object({
   q: z.string().trim().min(1, "Search query cannot be empty"),
@@ -74,6 +75,14 @@ export async function selectStock(req: Request, res: Response) {
 
     const recommendation: Recommendation = generateRecommendation(daily.candles, quote.percentChangeToday);
 
+
+    //Calculates the flip thresholds here to see if the recommendation will change or not
+    const flipThresholds = calculateFlipThresholds(
+      daily.candles,
+      quote.currentPrice,
+      quote.percentChangeToday
+    );
+
     /**
      * Old Logic, revamped with below 
      *
@@ -126,7 +135,7 @@ export async function selectStock(req: Request, res: Response) {
       console.error("Failed to write search history:", historyErr);
     }
 
-    return res.status(200).json({ quote, recommendation });
+    return res.status(200).json({ quote, recommendation, flipThresholds, candles: daily.candles });
   } catch (err) {
     if (err instanceof SymbolNotSupportedError) {
       console.error("SymbolNotSupportedError in selectStock:", err.message);
