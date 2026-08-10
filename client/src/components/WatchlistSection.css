@@ -1,75 +1,130 @@
 .watchlist-section {
-    margin-top: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.watchlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
 }
 
 .watchlist-title {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-    margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--color-ink);
 }
 
+.watchlist-count {
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+}
+
+.watchlist-loading,
 .watchlist-empty {
-    font-size: 0.9rem;
-    color: var(--color-ink-muted);
-    padding: var(--space-4);
-    border: 1px dashed var(--color-hairline);
-    border-radius: var(--radius);
-    text-align: center;
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  color: var(--color-ink-muted);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
 }
 
-.watchlist-list {
-    border: 1px solid var(--color-hairline);
-    border-radius: var(--radius);
-    overflow: hidden;
+.watchlist-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-.watchlist-row {
-    display: grid;
-    grid-template-columns: 80px 1fr auto;
-    align-items: center;
-    gap: var(--space-3);
-    width: 100%;
-    padding: var(--space-3) var(--space-4);
-    background: var(--color-paper-raised);
-    border: none;
-    border-bottom: 1px solid var(--color-hairline);
-    cursor: pointer;
+.watchlist-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius);
+  transition: all 0.15s ease;
 }
 
-.watchlist-row:last-child {
-    border-bottom: none;
+.watchlist-item:hover {
+  border-color: var(--color-ink-muted);
+  background: var(--color-paper);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
-.watchlist-row:hover {
-    background: var(--color-paper);
+.watchlist-left {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
 }
 
 .watchlist-ticker {
-    font-weight: 500;
-    color: var(--color-ink);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: 0.02em;
 }
 
 .watchlist-exchange {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    color: var(--color-muted-gold);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-ink-muted);
+  background: var(--color-paper);
+  padding: var(--space-1) var(--space-2);
+  border-radius: 3px;
+  border: 1px solid var(--color-hairline);
 }
 
-.watchlist-remove {
-    background: none;
-    border: 1px solid var(--color-hairline);
-    border-radius: var(--radius);
-    padding: var(--space-1) var(--space-3);
-    font-size: 0.75rem;
-    color: var(--color-ink-muted);
-    cursor:pointer;
+.watchlist-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
 }
 
-.watchlist-remove:hover {
-    border-color: var(--color-brick-red);
-    color: var(--color-brick-red);
+.watchlist-price {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.watchlist-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 4px;
+  min-width: 48px;
+  text-align: center;
+}
+
+.signal-buy {
+  background: var(--color-ledger-green);
+  color: var(--color-paper-raised);
+}
+
+.signal-sell {
+  background: var(--color-brick-red);
+  color: var(--color-paper-raised);
+}
+
+.signal-hold {
+  background: var(--color-muted-gold);
+  color: var(--color-paper-raised);
+}
+
+.watchlist-confidence {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  min-width: 32px;
+  text-align: right;
 }
