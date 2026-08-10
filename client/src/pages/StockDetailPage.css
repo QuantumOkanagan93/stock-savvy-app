@@ -63,6 +63,23 @@
   color: var(--color-muted-gold);
 }
 
+.watchlist-toggle {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--color-ink-muted);
+}
+
+.watchlist-toggle-active {
+  background: var(--color-ledger-green);
+  border-color: var(--color-ledger-green);
+  color: var(--color-paper-raised);
+}
+
 .detail-price-row {
   display: flex;
   align-items: baseline;
@@ -90,6 +107,40 @@
   color: var(--color-brick-red);
 }
 
+/* Tabs */
+.detail-tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.detail-tab {
+  background: none;
+  border: none;
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.9rem;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.detail-tab:hover {
+  color: var(--color-ink);
+}
+
+.detail-tab.active {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-ledger-green);
+  font-weight: 500;
+}
+
+/* Tab Content */
+.detail-tab-content {
+  min-height: 100px;
+}
+
 .detail-meta {
   display: flex;
   flex-direction: column;
@@ -100,6 +151,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
+  padding: var(--space-1) 0;
 }
 
 .detail-meta-label {
@@ -111,19 +163,18 @@
 }
 
 .detail-placeholder-note {
-  margin: var(--space-6) 0 0;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-hairline);
   font-size: 0.8rem;
   color: var(--color-ink-muted);
   font-style: italic;
+  text-align: center;
 }
 
+/* Recommendation Card */
 .recommendation-card {
-  margin-top: var(--space-4);
   padding: var(--space-6);
   border-radius: var(--radius);
   border: 1px solid var(--color-hairline);
+  margin-bottom: var(--space-6);
 }
 
 .recommendation-buy {
@@ -141,6 +192,13 @@
   border-color: rgba(140, 59, 46, 0.3);
 }
 
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
 .recommendation-signal {
   display: inline-block;
   font-family: var(--font-mono);
@@ -150,27 +208,24 @@
   text-transform: uppercase;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius);
-  margin-bottom: var(--space-3);
-}
-
-.recommendation-confidence {
-  font-size: 0.75rem;
-  color: var(--color-ink-muted);
 }
 
 .recommendation-buy .recommendation-signal {
   background: var(--color-ledger-green);
   color: var(--color-paper-raised);
 }
-
 .recommendation-sell .recommendation-signal {
   background: var(--color-brick-red);
   color: var(--color-paper-raised);
 }
-
 .recommendation-hold .recommendation-signal {
   background: var(--color-muted-gold);
   color: var(--color-paper-raised);
+}
+
+.recommendation-confidence {
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
 }
 
 .recommendation-explanation {
@@ -181,21 +236,11 @@
 }
 
 .recommendation-reasons {
-  margin: 0 0 var(--space-3);
+  margin: 0;
   padding-left: var(--space-4);
   font-size: 0.85rem;
   color: var(--color-ink-muted);
   line-height: 1.7;
-}
-
-.recommendation-warnings {
-  margin-bottom: var(--space-3);
-}
-
-.recommendation-warning {
-  margin: 0 0 var(--space-1);
-  font-size: 0.8rem;
-  color: var(--color-brick-red);
 }
 
 .recommendation-disclaimer {
@@ -203,4 +248,57 @@
   font-size: 0.75rem;
   color: var(--color-ink-muted);
   font-style: italic;
+}
+
+/* Flip Threshold Card (Within Signal Tab) */
+.flip-threshold-card {
+  padding: var(--space-4);
+  background: var(--color-paper);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius);
+}
+
+.flip-header {
+  margin-bottom: var(--space-3);
+}
+
+.flip-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.flip-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.flip-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--color-brick-red);
+}
+
+.flip-from {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.flip-price {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* Details Tab */
+.detail-indicators {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
