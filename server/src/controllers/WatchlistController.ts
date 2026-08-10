@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
-import { z } from "zod";
+import { promise, z } from "zod";
 import { prisma } from "../lib/prisma";
+import { getMarketDataProvider } from "../services/market-data/ProviderFactory";
+import { generateRecommendation } from "../services/market-data/recommendation/RecommendationEngine";
 
 const DEFAULT_WATCHLIST_NAME = "My Watchlist";
 
@@ -34,6 +36,67 @@ export async function getWatchlist(req: Request, res: Response) {
     });
 
     return res.status(200).json({ items });
+}
+
+//Returns watchlist with LIVE quotes and Recommendations
+export async function getWatchlistWithData(req: Request, res: Response) {
+    const userId = req.user!.userId;
+
+    const watchlist = await getOrCreateDefaultWatchlist(userId);
+
+    const items = await prisma.watchlistItem.findMany({
+        where: { watchlistId: watchlist.id },
+        orderBy: { addedAt: "desc" },
+    });
+
+    if (items.length === 0) {
+        return res.status(200).json({ items: [] });
+    }
+
+    const provider = getMarketDataProvider();
+    const now = Math.floor(Date.now() / 1000);
+    const twoHundredDaysAgo = now - 200 * 24 * 60 * 60;
+
+    //Fetch live data for every stock in watchlist
+    const enrichedItems = await Promise.all(
+        items.map(async (item) => {
+            try {
+                //Get current quote
+                const quote = await provider.getQuote({
+                    ticker: item.ticker,
+                    exchange: item.exchange,
+                });
+
+                //Get historical candles for recommendation engine
+                const daily = await provider.getHistoricalDaily(
+                    { ticker: item.ticker, exchange: item.exchange },
+                    twoHundredDaysAgo,
+                    now
+                );
+
+                //Generate recommendation
+                const recommendation = generateRecommendation(
+                    daily.candles,
+                    quote.percentChangeToday
+                );
+
+                return {
+                    ...item,
+                    currentPrice: quote.currentPrice,
+                    recommendation,
+                };
+            } catch (err) {
+                //If fetch fails, return item without live data
+                console.error(`Failed to fetch data for ${item.ticker}:`, err);
+                return {
+                    ...item,
+                    currentPrice: null,
+                    recommendation: null,
+                };
+            }
+        })
+    );
+    return res.status(200).json({ items: enrichedItems });
 }
 
 const addSchema = z.object({
