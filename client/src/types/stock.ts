@@ -52,3 +52,13 @@ export interface SearchHistoryEntry {
     exchange: Exchange;
     createdAt: string;
 }
+
+export interface StockDetailResponse {
+    quote: Quote;
+    recommendation: Recommendation;
+    flipThresholds: {
+        buyToHold: number | null;
+        holdToSell: number | null;
+    };
+    candles: any[];
+}
