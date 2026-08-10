@@ -1,8 +1,26 @@
 import { apiRequest } from "./client";
 import { type WatchlistItemEntry, type Exchange } from "../types/stock";
 
+export interface WatchlistItemWithData extends WatchlistItemEntry {
+    currentPrice?: number | null;
+    recommendation?: {
+        signal: "BUY" | "HOLD" | "SELL";
+        confidence: number;
+        score: number;
+        explanation: string;
+        reasons: string[];
+        warnings: string[];
+        indicators: any;
+    } | null;
+}
+
 export function getWatchlist() {
     return apiRequest<{ items: WatchlistItemEntry[] }>("/api/watchlist");
+}
+
+//Fetch watchlist with live quotes and recommendations
+export function getWatchlistWithData() {
+    return apiRequest<{ items: WatchlistItemWithData[] }>("/api/watchlist/with-data");
 }
 
 export function addToWatchlist(ticker: string, exchange: Exchange) {
